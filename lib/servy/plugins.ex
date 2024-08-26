@@ -15,7 +15,13 @@ defmodule Servy.Plugins do
 
   def rewrite_path(%Conv{} = conv), do: conv
 
-  def log(%Conv{} = conv), do: IO.inspect(conv)
+  def log(%Conv{} = conv) do
+    if Mix.env() != :test do
+      IO.inspect(conv)
+    end
+
+    conv
+  end
 
   def rewrite_path_params(%Conv{path: path} = conv) do
     case String.split(path, "?id=") do
