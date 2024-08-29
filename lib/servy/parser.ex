@@ -2,15 +2,24 @@ defmodule Servy.Parser do
   alias Servy.Conv
 
   def parse(request) do
-    [top, params_string] = String.split(request, "\r\n\r\n")
-    [request_line | header_lines] = String.split(top, "\r\n")
+    IO.puts("➡️  Received request:\n")
+    IO.puts(request)
+    IO.puts("🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥")
+
+    # [top, params_string] = String.split(request, "\r\n\r\n")
+    [request_line | header_lines] = String.split(request, "\r\n")
+
+    IO.puts("Request Line: #{request_line}")
+    IO.inspect(header_lines)
+    IO.puts("🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥")
 
     [method, path, _] = String.split(request_line, " ")
 
+    header_lines = Enum.filter(header_lines, fn line -> String.contains?(line, ":") end)
     headers = parse_headers(header_lines, %{})
-    params = parse_params(headers["Content-Type"], params_string)
+    # params = parse_params(headers["Content-Type"], params_string)
 
-    %Conv{method: method, path: path, params: params, headers: headers}
+    %Conv{method: method, path: path, params: %{}, headers: headers}
   end
 
   @doc """
